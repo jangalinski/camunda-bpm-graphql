@@ -26,7 +26,7 @@ import static org.mockito.Mockito.when;
 import static org.camunda.spin.Spin.JSON;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = {GraphQLServer.class, TestConfig.class, EngineConfig.class})
+@SpringBootTest(classes = {GraphQLApplication.class, TestConfig.class})
 public class GraphQLTest {
 
     private static final String PROCESS_KEY = "credit-application";

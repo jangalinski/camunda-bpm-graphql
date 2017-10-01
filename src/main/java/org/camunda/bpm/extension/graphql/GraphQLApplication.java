@@ -8,32 +8,31 @@ import graphql.schema.GraphQLSchema;
 import graphql.servlet.SimpleGraphQLServlet;
 import org.camunda.bpm.engine.identity.Group;
 import org.camunda.bpm.engine.identity.User;
-import org.camunda.bpm.engine.impl.persistence.entity.*;
+import org.camunda.bpm.engine.impl.persistence.entity.ExecutionEntity;
+import org.camunda.bpm.engine.impl.persistence.entity.GroupEntity;
+import org.camunda.bpm.engine.impl.persistence.entity.ProcessDefinitionEntity;
+import org.camunda.bpm.engine.impl.persistence.entity.TaskEntity;
+import org.camunda.bpm.engine.impl.persistence.entity.UserEntity;
 import org.camunda.bpm.engine.repository.ProcessDefinition;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.camunda.bpm.engine.task.Task;
 import org.camunda.bpm.extension.graphql.types.KeyValuePair;
 import org.camunda.bpm.extension.graphql.types.ValueTypeEnum;
+import org.camunda.bpm.spring.boot.starter.annotation.EnableProcessApplication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
-import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 
 import java.util.List;
 
 @SpringBootApplication
-public class GraphQLServer extends SpringBootServletInitializer {
-
-    @Override
-    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-        return application.sources(GraphQLServer.class);
-    }
+@EnableProcessApplication
+public class GraphQLApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(GraphQLServer.class, args);
+        SpringApplication.run(GraphQLApplication.class, args);
     }
 
     @Autowired
@@ -69,12 +68,12 @@ public class GraphQLServer extends SpringBootServletInitializer {
     }
 
     @Bean
-    ExecutionStrategy executionStrategy() {
+    public ExecutionStrategy executionStrategy() {
         return new SimpleExecutionStrategy();
     }
 
     @Bean
-    ServletRegistrationBean graphQLServletRegistrationBean(GraphQLSchema schema, ExecutionStrategy executionStrategy) {
+    public ServletRegistrationBean graphQLServletRegistrationBean(GraphQLSchema schema, ExecutionStrategy executionStrategy) {
         return new ServletRegistrationBean(new SimpleGraphQLServlet(schema, executionStrategy), "/graphql");
     }
 }
